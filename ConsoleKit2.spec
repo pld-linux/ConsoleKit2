@@ -145,6 +145,7 @@ install -d $RPM_BUILD_ROOT%{systemdtmpfilesdir}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %{__rm} $RPM_BUILD_ROOT/%{_lib}/security/*.{a,la}
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -179,6 +180,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ck-log-system-start
 %attr(755,root,root) %{_sbindir}/ck-log-system-stop
 %attr(755,root,root) %{_sbindir}/console-kit-daemon
+%{_mandir}/man1/ck-history.1*
+%{_mandir}/man1/ck-launch-session.1*
+%{_mandir}/man1/ck-list-sessions.1*
+%{_mandir}/man1/console-kit-daemon.1m*
 %attr(755,root,root) %{_libdir}/ck-collect-session-info
 %attr(755,root,root) %{_libdir}/ConsoleKit/scripts/*
 %attr(755,root,root) /%{_lib}/security/pam_ck_connector.so
@@ -188,6 +193,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/interfaces/org.freedesktop.ConsoleKit.Seat.xml
 %{_datadir}/dbus-1/interfaces/org.freedesktop.ConsoleKit.Session.xml
 /etc/dbus-1/system.d/ConsoleKit.conf
+/etc/X11/xinit/xinitrc.d/90-consolekit
+%config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/consolekit
 %{_sysconfdir}/ConsoleKit/seats.d/00-primary.seat
 %{_mandir}/man8/pam_ck_connector.8*
 %{systemdunitdir}/basic.target.wants/console-kit-log-system-start.service
@@ -201,6 +208,7 @@ rm -rf $RPM_BUILD_ROOT
 %{systemdunitdir}/reboot.target.wants/console-kit-log-system-restart.service
 
 %attr(755,root,root) /lib/udev/udev-acl
+%attr(755,root,root) %{_libdir}/udev-acl
 %attr(755,root,root) %{_libdir}/ConsoleKit/run-seat.d/udev-acl.ck
 /lib/udev/rules.d/70-udev-acl.rules
 
