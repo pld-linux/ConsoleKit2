@@ -1,7 +1,7 @@
 Summary:	ConsoleKit2 is a framework for defining and tracking users, login sessions, and seats
 Name:		ConsoleKit2
 Version:	1.0.2
-Release:	0.1
+Release:	0.2
 License:	GPL v2+
 Group:		Libraries
 Source0:	https://github.com/ConsoleKit2/ConsoleKit2/releases/download/%{version}/%{name}-%{version}.tar.bz2
@@ -228,6 +228,7 @@ rm -rf $RPM_BUILD_ROOT
 #%dir %{_sysconfdir}/ConsoleKit/run-session.d
 #%dir %{_sysconfdir}/ConsoleKit/run-seat.d
 %dir %{_sysconfdir}/ConsoleKit/seats.d
+%dir %{_libdir}/ConsoleKit
 %dir %{_libdir}/ConsoleKit/run-session.d
 %dir %{_libdir}/ConsoleKit/run-seat.d
 %dir %{_libdir}/ConsoleKit/scripts
