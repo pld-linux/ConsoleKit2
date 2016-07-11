@@ -34,6 +34,7 @@ Requires:	glib2 >= 1:2.40
 Requires:	rc-scripts >= 0.4.3.0
 Requires:	systemd-units >= 38
 Provides:	udev-acl = 1:182-1
+Obsoletes:	ConsoleKit
 Obsoletes:	ConsoleKit-systemd
 Obsoletes:	udev-acl < 1:182
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -55,6 +56,7 @@ Summary(pl.UTF-8):	Biblioteka ConsoleKit
 License:	AFL v2.1 or GPL v2
 Group:		Libraries
 Requires:	dbus-libs >= 0.30
+Obsoletes:	ConsoleKit-libs
 
 %description libs
 ConsoleKit library.
@@ -67,6 +69,7 @@ Summary:	ConsoleKit directories
 Summary(pl.UTF-8):	Katalogi ConsoleKit
 License:	AFL v2.1 or GPL v2
 Group:		Libraries
+Obsoletes:	ConsoleKit-dirs
 
 %description dirs
 ConsoleKit directories.
@@ -108,6 +111,7 @@ License:	GPL v2+
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
 Requires:	xorg-lib-libX11 >= 1.0.0
+Obsoletes:	ConsoleKit-x11
 
 %description x11
 X11 session support utilities for ConsoleKit.
