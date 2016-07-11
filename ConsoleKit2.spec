@@ -1,26 +1,25 @@
-Summary:	ConsoleKit for PolicyKit
-Summary(pl.UTF-8):	ConsoleKit dla PolicyKit
+Summary:	ConsoleKit2 is a framework for defining and tracking users, login sessions, and seats
 Name:		ConsoleKit2
-Version:	0.4.6
-Release:	3
+Version:	1.0.2
+Release:	0.1
 License:	GPL v2+
 Group:		Libraries
-Source0:	http://www.freedesktop.org/software/ConsoleKit/dist/%{name}-%{version}.tar.xz
-# Source0-md5:	611792b4d616253a5bdec9175f8b7678
-Source1:	%{name}.tmpfiles
-URL:		http://www.freedesktop.org/wiki/Software/ConsoleKit
+Source0:	https://github.com/ConsoleKit2/ConsoleKit2/releases/download/%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	e03dd98322c78425a87418af9d788518
+Source1:	ConsoleKit.tmpfiles
+URL:		https://github.com/ConsoleKit2/ConsoleKit2
 BuildRequires:	dbus-glib-devel >= 0.82
 BuildRequires:	docbook-dtd412-xml
-BuildRequires:	gettext-tools
-BuildRequires:	glib2-devel >= 1:2.22.0
+BuildRequires:	gettext-tools >= 0.15
+BuildRequires:	glib2-devel >= 1:2.40
 # for <sys/inotify.h>
 BuildRequires:	glibc-devel >= 6:2.4
-BuildRequires:	udev-devel
 BuildRequires:	pam-devel >= 0.80
 BuildRequires:	pkgconfig
 BuildRequires:	polkit-devel >= 0.92
 BuildRequires:	rpmbuild(macros) >= 1.626
 BuildRequires:	tar >= 1:1.22
+BuildRequires:	udev-devel
 BuildRequires:	xmlto
 BuildRequires:	xorg-lib-libX11-devel >= 1.0.0
 BuildRequires:	xz
@@ -31,7 +30,7 @@ Requires:	%{name}-dirs = %{version}-%{release}
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus-glib >= 0.82
 Requires:	filesystem >= 3.0-25
-Requires:	glib2 >= 1:2.14.0
+Requires:	glib2 >= 1:2.40
 Requires:	rc-scripts >= 0.4.3.0
 Requires:	systemd-units >= 38
 Provides:	udev-acl = 1:182-1
@@ -40,8 +39,11 @@ Obsoletes:	udev-acl < 1:182
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-ConsoleKit is a framework for defining and tracking users, login
-sessions, and seats.
+ConsoleKit2 is a framework for defining and tracking users, login
+sessions, and seats. It allows multiple users to be logged in at the
+same time and share hardware for their graphical session. ConsoleKit2
+will keep track of those resources and whichever session is active
+will have use of the hardware at that time.
 
 %description -l pl.UTF-8
 ConsoleKit to szkielet do definiowania i śledzenia użytkowników, sesji
@@ -53,7 +55,6 @@ Summary(pl.UTF-8):	Biblioteka ConsoleKit
 License:	AFL v2.1 or GPL v2
 Group:		Libraries
 Requires:	dbus-libs >= 0.30
-Conflicts:	ConsoleKit < 0.1-0.20061203.6
 
 %description libs
 ConsoleKit library.
@@ -66,7 +67,6 @@ Summary:	ConsoleKit directories
 Summary(pl.UTF-8):	Katalogi ConsoleKit
 License:	AFL v2.1 or GPL v2
 Group:		Libraries
-Conflicts:	ConsoleKit < 0.4.1-2
 
 %description dirs
 ConsoleKit directories.
@@ -137,12 +137,12 @@ Narzędzia obsługujące sesje X11 dla pakietu ConsoleKit.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+install -d $RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install %{SOURCE1} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %{__rm} $RPM_BUILD_ROOT/%{_lib}/security/*.{a,la}
 
@@ -180,7 +180,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ck-log-system-stop
 %attr(755,root,root) %{_sbindir}/console-kit-daemon
 %attr(755,root,root) %{_libdir}/ck-collect-session-info
-%attr(755,root,root) %{_prefix}/lib/ConsoleKit/scripts/*
+%attr(755,root,root) %{_libdir}/ConsoleKit/scripts/*
 %attr(755,root,root) /%{_lib}/security/pam_ck_connector.so
 %{_datadir}/polkit-1/actions/org.freedesktop.consolekit.policy
 %{_datadir}/dbus-1/system-services/org.freedesktop.ConsoleKit.service
@@ -201,9 +201,9 @@ rm -rf $RPM_BUILD_ROOT
 %{systemdunitdir}/reboot.target.wants/console-kit-log-system-restart.service
 
 %attr(755,root,root) /lib/udev/udev-acl
-%attr(755,root,root) /usr/lib/ConsoleKit/run-seat.d/udev-acl.ck
+%attr(755,root,root) %{_libdir}/ConsoleKit/run-seat.d/udev-acl.ck
 /lib/udev/rules.d/70-udev-acl.rules
- 
+
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libck-connector.so.*.*.*
@@ -211,14 +211,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files dirs
 %defattr(644,root,root,755)
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 %dir %{_sysconfdir}/ConsoleKit
-%dir %{_sysconfdir}/ConsoleKit/run-session.d
-%dir %{_sysconfdir}/ConsoleKit/run-seat.d
+#%dir %{_sysconfdir}/ConsoleKit/run-session.d
+#%dir %{_sysconfdir}/ConsoleKit/run-seat.d
 %dir %{_sysconfdir}/ConsoleKit/seats.d
-%dir %{_prefix}/lib/ConsoleKit/run-session.d
-%dir %{_prefix}/lib/ConsoleKit/run-seat.d
-%dir %{_prefix}/lib/ConsoleKit/scripts
+%dir %{_libdir}/ConsoleKit/run-session.d
+%dir %{_libdir}/ConsoleKit/run-seat.d
+%dir %{_libdir}/ConsoleKit/scripts
 %dir %{_localstatedir}/run/ConsoleKit
 %dir %{_localstatedir}/log/ConsoleKit
 
