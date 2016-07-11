@@ -1,6 +1,6 @@
 Summary:	ConsoleKit for PolicyKit
 Summary(pl.UTF-8):	ConsoleKit dla PolicyKit
-Name:		ConsoleKit
+Name:		ConsoleKit2
 Version:	0.4.6
 Release:	3
 License:	GPL v2+
